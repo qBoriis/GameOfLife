@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Game of Life</title>
+        <link rel="stylesheet" href="styles/index.css">
+    </head>
+
+    <body>
+        <h1 id="header" style="text-align: center;">Game of Life</h1>
+        <section id="field"></section>
+
+        <div id="btns">
+            <button type="button" id="start">Start</button>
+            <button type="button" id="clear">Clear</button>
+        </div>
+
+        <script>
+            let col = 40;
+            let row = 60;
+            let field = "";
+            let clicked = false;
+            
+            for (let i = 0; i < col; i++) {
+                field += "<div class='row'>";
+                for (let j = 0; j < row; j++) {
+                    field += "<div class='col' id='" + i + "_" + j + "'></div>";
+                }
+                field += "</div>"
+            }
+
+            let grid = new Array();
+            let nextGrid = new Array();
+
+            for (let i = 0; i < col; i++) {
+                grid[i] = new Array();
+                nextGrid[i] = new Array();
+                for (let j = 0; j < row; j++) {
+                    grid[i][j] = false;
+                    nextGrid[i][j] = false;
+                }
+            }
+
+            document.getElementById("field").innerHTML = field;
+
+            
+
+
+            // default cells
+            grid[12][18] = true;
+            document.getElementById(12 + "_" + 18).style.backgroundColor = "#8884FF";
+            grid[12][19] = true;
+            document.getElementById(12 + "_" + 19).style.backgroundColor = "#8884FF";
+            grid[12][20] = true;
+            document.getElementById(12 + "_" + 20).style.backgroundColor = "#8884FF";
+            grid[11][20] = true;
+            document.getElementById(11 + "_" + 20).style.backgroundColor = "#8884FF";
+            grid[10][19] = true;
+            document.getElementById(10 + "_" + 19).style.backgroundColor = "#8884FF";
+
+
+            for (let i = 0; i < col; i++) {
+                for (let j = 0; j < row; j++) {
+                    document.getElementById(i + "_" + j).addEventListener("click", function () {
+                        if (grid[i][j]) {
+                            this.style.backgroundColor = "#ddd";
+                            grid[i][j] = false;
+                        } else {
+                            this.style.backgroundColor = "#8884FF";
+                            grid[i][j] = true;
+                        }
+                    })
+                }
+            }
+
+
+            document.getElementById("start").onclick = function () {
+                if (clicked) {
+                    this.innerHTML = "Start";
+                    clearInterval(timerId);
+                    clicked = false;
+                } else {
+                    startSimulation();
+                    clicked = true;
+                    this.innerHTML = "Stop";
+                }
+            }
+
+            document.getElementById("clear").onclick = function () {
+                for (let i = 0; i < col; i++) {
+                    for (let j = 0; j < row; j++) {
+                        grid[i][j] = false;
+                        document.getElementById(i + "_" + j).style.backgroundColor = "#ddd";
+                    }
+                }
+
+                document.getElementById("start").innerHTML = "Start";
+                clearInterval(timerId);
+                clicked = false;
+            }
+
+
+            let timerId = null;
+
+            function countNeighbors(x, y) {
+                let neighbors = 0;
+                for(let i = -1; i < 2;i++){
+                    for(let j = -1; j < 2; j++){
+                        if(i == 0 && j == 0) continue;
+                        
+                        let c = (x + i + col) % col;
+                        let r = (y + j + row) % row;
+                        
+                        if(grid[c][r] == true){
+                            neighbors++;
+                        }
+                    }
+                }
+                return neighbors;
+            }
+
+            function calculateNextGeneration() {
+                for (let i = 0; i < col; i++) {
+                    for (let j = 0; j < row; j++) {
+                        let neighbors = countNeighbors(i, j);
+
+                        if (grid[i][j]) {
+                            if (neighbors < 2 || neighbors > 3) {
+                                nextGrid[i][j] = false;
+                            } else {
+                                nextGrid[i][j] = true;
+                            }
+                        } else {
+                            if (neighbors == 3) {
+                                nextGrid[i][j] = true;
+                            } else {
+                                nextGrid[i][j] = false;
+                            }
+                        }
+                    }
+                }
+
+                
+                for (let i = 0; i < col; i++) {
+                    for (let j = 0; j < row; j++) {
+                        grid[i][j] = nextGrid[i][j];
+                    }
+                }
+            }
+
+            
+            function updateGrid() {
+                for (let i = 0; i < col; i++) {
+                    for (let j = 0; j < row; j++) {
+                        if (grid[i][j]) {
+                            document.getElementById(i + "_" + j).style.backgroundColor = "#8884FF";
+                        } else {
+                            document.getElementById(i + "_" + j).style.backgroundColor = "#ddd";
+                        }
+                    }
+                }
+            }
+
+            
+            function startSimulation() {
+                timerId = setInterval(function () {
+                    calculateNextGeneration();
+                    updateGrid();
+                }, 100);
+            }
+
+        </script>
+    </body>
+</html>

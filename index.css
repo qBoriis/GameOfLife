@@ -1,0 +1,50 @@
+.col {
+    background-color: #F1F0EA;
+    width: 15px;
+    height: 15px;
+    border: 1px solid #242325;
+    display: inline-block;
+  }
+  
+  .row {
+    height: 15px;
+  }
+  
+  body {
+    margin: auto;
+    background-color: #242325;
+    color: #F1F0EA;
+  }
+  
+  #start {
+    background-color: #5B8E7D;
+    color: #F1F0EA;
+  }
+  
+  #clear {
+    background-color: #5B8E7D;
+    color: #F1F0EA;
+  }
+  
+  section {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  button {
+    display: inline-block;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    margin: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  #btns{
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
